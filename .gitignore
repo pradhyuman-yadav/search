@@ -127,6 +127,10 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+scraper/
+
+# Knowledge Base
+Researched_content.py
 
 # Spyder project settings
 .spyderproject
