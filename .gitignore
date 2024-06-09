@@ -131,6 +131,7 @@ scraper/
 
 # Knowledge Base
 Researched_content.py
+browser_logs.txt
 
 # Spyder project settings
 .spyderproject

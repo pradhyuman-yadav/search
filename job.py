@@ -9,9 +9,10 @@ import os
 from _google_search import DecoderGoogle
 from _database_connection import JsonDatabase
 from _linkedin import DecoderLinkedin
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 load_dotenv()  # This loads the variables from .env
-discord_webook_link = os.getenv("DISCORD_WEBHOOK_PROD")
+discord_webook_link = os.getenv("DISCORD_WEBHOOK_TEST")
 now = datetime.datetime.now()
 
 # TODO
@@ -41,6 +42,10 @@ chrome_options = webdriver.ChromeOptions()
 chrome_options.add_argument("--disable-extensions")
 chrome_options.add_argument("--disable-gpu")
 # chrome_options.add_argument("--start-fullscreen")
+
+# Enable logging
+capabilities = DesiredCapabilities.CHROME
+capabilities['goog:loggingPrefs'] = {'browser': 'ALL'}  # Capturing all browser logs
 
 # Mock location - latitude, longitude, and accuracy
 latitude = 40.712776
@@ -72,7 +77,14 @@ time.sleep(1)
 webhook.send("Linkedin Page active")
 linkedin = DecoderLinkedin(driver=driver, webhook=webhook, database_file=JsonDatabase("database/" + os.getenv("LINKEDIN_DATABASE_NAME")), keyword='Software')
 linkedin.load()
-linkedin.search()
-linkedin.getJobsAndLinks()
+# linkedin.search()
+# linkedin.getJobsAndLinks()
+logs = driver.get_log('browser')
+
+with open('browser_logs.txt', 'w') as file:
+    for entry in logs:
+        # Each entry is a dictionary. Convert it to a string and write to the file.
+        # You can format this as needed; here's a simple example:
+        file.write(f"{entry['timestamp']} - {entry['level']} - {entry['message']}\n")
 
 driver.close()
